@@ -7,14 +7,14 @@
 
 #define DEBUG 0
 
-#define PLUGIN_VERSION                  "1.0.5"
+#define PLUGIN_VERSION "1.0.5"
 
-#define	SHAKE_START                     0     // Starts the screen shake for all players within the radius.
-#define	SHAKE_STOP                      1     // Stops the screen shake for all players within the radius.
-#define	SHAKE_AMPLITUDE                 2     // Modifies the amplitude of an active screen shake for all players within the radius.
-#define	SHAKE_FREQUENCY                 3     // Modifies the frequency of an active screen shake for all players within the radius.
-#define	SHAKE_START_RUMBLEONLY          4     // Starts a shake effect that only rumbles the controller, no screen effect.
-#define	SHAKE_START_NORUMBLE            5     // Starts a shake that does NOT rumble the controller.
+#define SHAKE_START                 0     // Starts the screen shake for all players within the radius.
+#define SHAKE_STOP                  1     // Stops the screen shake for all players within the radius.
+#define SHAKE_AMPLITUDE             2     // Modifies the amplitude of an active screen shake for all players within the radius.
+#define SHAKE_FREQUENCY             3     // Modifies the frequency of an active screen shake for all players within the radius.
+#define SHAKE_START_RUMBLEONLY      4     // Starts a shake effect that only rumbles the controller, no screen effect.
+#define SHAKE_START_NORUMBLE        5     // Starts a shake that does NOT rumble the controller.
 
 #define SOUND_QUAKE   g_bLeft4Dead2 ? "player/charger/hit/charger_smash_02.wav" : "player/t/hit/hulk_punch_1"
 #define SOUND_ROAR    "player/tank/voice/yell/tank_yell_12.wav"

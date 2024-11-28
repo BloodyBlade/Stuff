@@ -6,7 +6,7 @@
 #include <sdktools>
 #include <entity_prop_stocks>
 
-#define PLUGIN_VERSION   "1.4.8"
+#define PLUGIN_VERSION "1.4.8"
 
 #define DOOR_CLASS_01 "prop_door_rotating"
 #define DOOR_CLASS_02 "prop_door_rotating_checkpoint"
@@ -88,19 +88,16 @@ void evt_KilledTank(Event event, const char[] name, bool dontBroadcast)
 
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon, int &subtype, int &cmdnum, int &tickcount, int &seed, int mouse[2])
 {
-	if (!g_hPluginEnabled.BoolValue)
+	if (!g_hPluginEnabled.BoolValue || g_iTankCount <= 0 || !(buttons & IN_ATTACK) || !IsValidTank(client) || IsPlayerGhost(client))
 		return Plugin_Continue;
-	if (g_iTankCount > 0 && (buttons & IN_ATTACK) && IsValidTank(client) && !IsPlayerGhost(client))
+	int tankweapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+	if (tankweapon > 0)
 	{
-		int tankweapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
-		if (tankweapon > 0)
+		float gameTime = GetGameTime();
+		if (GetEntPropFloat(tankweapon, Prop_Send, "m_flTimeWeaponIdle") <= gameTime && g_fNextTankPunchAllowed[client] <= gameTime)
 		{
-			float gameTime = GetGameTime();
-			if (GetEntPropFloat(tankweapon, Prop_Send, "m_flTimeWeaponIdle") <= gameTime && g_fNextTankPunchAllowed[client] <= gameTime)
-			{
-				g_fNextTankPunchAllowed[client] = gameTime + 2.0;
-				CreateTimer(1.0, Timer_DoorCheck, GetClientUserId(client));
-			}
+			g_fNextTankPunchAllowed[client] = gameTime + 2.0;
+			CreateTimer(1.0, Timer_DoorCheck, GetClientUserId(client));
 		}
 	}
 	return Plugin_Continue;
