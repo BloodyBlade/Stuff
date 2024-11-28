@@ -25,7 +25,7 @@ ConVar g_hPluginEnabled;
 public Plugin myinfo = 
 {
 	name = "TankDoorFix",
-	author = "PP(R)TH: Dr. Gregory House, Glide Loading, Uncle Jessie, Dosergen",
+	author = "PP(R)TH: Dr. Gregory House, Glide Loading, Dosergen",
 	description = "Fixes Tank not destroying doors properly",
 	version = PLUGIN_VERSION,
 	url = "http://forums.alliedmods.net/showthread.php?t=225087"
@@ -36,13 +36,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	switch (GetEngineVersion())
 	{
 		case Engine_Left4Dead:
-		{
 			g_iTankClassIndex = 5;
-		}
 		case Engine_Left4Dead2:
-		{
 			g_iTankClassIndex = 8;
-		}
 		default:
 		{
 			strcopy(error, err_max, "Plugin only supports Left 4 Dead 1 & 2.");
