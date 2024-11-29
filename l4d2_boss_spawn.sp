@@ -117,78 +117,47 @@ public void OnPluginStart()
 	
 	AutoExecConfig(true, "l4d2_boss_spawn");
 	
-	cvarPluginEnable.AddChangeHook(CvarChanged_Enable);
-	cvarInterval.AddChangeHook(CvarsChanged);    
-	cvarTanks.AddChangeHook(CvarsChanged);        
-	cvarTanksRandom.AddChangeHook(CvarsChanged);
-	cvarTanksChance.AddChangeHook(CvarsChanged);
-	cvarWitches.AddChangeHook(CvarsChanged);        
-	cvarWitchesRandom.AddChangeHook(CvarsChanged);
-	cvarWitchesChance.AddChangeHook(CvarsChanged);
-	cvarTotalTanks.AddChangeHook(CvarsChanged);        
-	cvarTotalTanksRandom.AddChangeHook(CvarsChanged);  
-	cvarCheckTanks.AddChangeHook(CvarsChanged);   
-	cvarTotalWitches.AddChangeHook(CvarsChanged);      
-	cvarTotalWitchesRandom.AddChangeHook(CvarsChanged);
-	cvarCheckWitches.AddChangeHook(CvarsChanged);
-	cvarStartTanks.AddChangeHook(CvarsChanged);
-	cvarFinaleTanks.AddChangeHook(CvarsChanged);
-	cvarStartWitches.AddChangeHook(CvarsChanged);
-	cvarFinaleWitches.AddChangeHook(CvarsChanged);
-	cvarRangeMinTank.AddChangeHook(CvarsChanged);  
-	cvarRangeMaxTank.AddChangeHook(CvarsChanged);  
-	cvarRangeMinWitch.AddChangeHook(CvarsChanged); 
-	cvarRangeMaxWitch.AddChangeHook(CvarsChanged);
-	cvarRangeRandom.AddChangeHook(CvarsChanged);
-	
-	EnablePlugin();
+	cvarPluginEnable.AddChangeHook(ConVarChanged_Allow);
+	cvarInterval.AddChangeHook(ConVarChanged_Cvars);    
+	cvarTanks.AddChangeHook(ConVarChanged_Cvars);        
+	cvarTanksRandom.AddChangeHook(ConVarChanged_Cvars);
+	cvarTanksChance.AddChangeHook(ConVarChanged_Cvars);
+	cvarWitches.AddChangeHook(ConVarChanged_Cvars);        
+	cvarWitchesRandom.AddChangeHook(ConVarChanged_Cvars);
+	cvarWitchesChance.AddChangeHook(ConVarChanged_Cvars);
+	cvarTotalTanks.AddChangeHook(ConVarChanged_Cvars);        
+	cvarTotalTanksRandom.AddChangeHook(ConVarChanged_Cvars);  
+	cvarCheckTanks.AddChangeHook(ConVarChanged_Cvars);   
+	cvarTotalWitches.AddChangeHook(ConVarChanged_Cvars);      
+	cvarTotalWitchesRandom.AddChangeHook(ConVarChanged_Cvars);
+	cvarCheckWitches.AddChangeHook(ConVarChanged_Cvars);
+	cvarStartTanks.AddChangeHook(ConVarChanged_Cvars);
+	cvarFinaleTanks.AddChangeHook(ConVarChanged_Cvars);
+	cvarStartWitches.AddChangeHook(ConVarChanged_Cvars);
+	cvarFinaleWitches.AddChangeHook(ConVarChanged_Cvars);
+	cvarRangeMinTank.AddChangeHook(ConVarChanged_Cvars);  
+	cvarRangeMaxTank.AddChangeHook(ConVarChanged_Cvars);  
+	cvarRangeMinWitch.AddChangeHook(ConVarChanged_Cvars); 
+	cvarRangeMaxWitch.AddChangeHook(ConVarChanged_Cvars);
+	cvarRangeRandom.AddChangeHook(ConVarChanged_Cvars);
 }
 
-void CvarChanged_Enable(ConVar convar, const char[] oldValue, const char[] newValue)
+public void OnConfigsExecuted()
 {
-	g_bPluginEnable = convar.BoolValue;
-	if (g_bPluginEnable && oldValue[0] == '0')
-		EnablePlugin();
-	else if (!g_bPluginEnable && oldValue[0] == '1')
-		DisablePlugin();
+	IsAllowed();
 }
 
-void CvarsChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+void ConVarChanged_Allow(ConVar convar, const char[] oldValue, const char[] newValue)
 {
-	GetCvarsValues();
+	IsAllowed();
 }
 
-void EnablePlugin()
+void ConVarChanged_Cvars(ConVar convar, const char[] oldValue, const char[] newValue)
 {
-	g_bPluginEnable = cvarPluginEnable.BoolValue;
-	if (g_bPluginEnable)
-	{
-		HookEvent("round_start", Event_RoundStart);
-		HookEvent("round_end", Event_RoundEnd);
-		HookEvent("player_left_checkpoint", Event_PlayerLeftCheckpoint);
-		HookEvent("player_left_start_area", Event_PlayerLeftCheckpoint);
-		//HookEvent("finale_start", Event_FinaleStart);//doesn't work all finales
-		HookEvent("tank_spawn", Event_TankSpawn);
-		HookEvent("witch_spawn", Event_WitchSpawn);
-		HookEntityOutput("trigger_finale", "FinaleStart", EntityOutput_FinaleStart);
-	}
-	GetCvarsValues();
+	GetCvars();
 }
 
-void DisablePlugin()
-{
-	UnhookEvent("round_start", Event_RoundStart);
-	UnhookEvent("round_end", Event_RoundEnd);
-	UnhookEvent("player_left_checkpoint", Event_PlayerLeftCheckpoint);
-	UnhookEvent("player_left_start_area", Event_PlayerLeftCheckpoint);
-	//UnhookEvent("finale_start", Event_FinaleStart);
-	UnhookEvent("tank_spawn", Event_TankSpawn);
-	UnhookEvent("witch_spawn", Event_WitchSpawn);
-	UnhookEntityOutput("trigger_finale", "FinaleStart", EntityOutput_FinaleStart);
-	delete g_hTimerCheckFlow;
-}
-
-void GetCvarsValues()
+void GetCvars()
 {
 	g_bRangeRandom = cvarRangeRandom.BoolValue;
 	g_bCheckTanks = cvarCheckTanks.BoolValue;
@@ -212,6 +181,37 @@ void GetCvarsValues()
 	g_fFlowPercentMinWitch = cvarRangeMinWitch.FloatValue;
 	g_fFlowPercentMaxWitch = cvarRangeMaxWitch.FloatValue;
 	g_fInterval = cvarInterval.FloatValue;
+}
+
+void IsAllowed()
+{
+	bool bCvarAllow = cvarPluginEnable.BoolValue;
+	GetCvars();
+	if (g_bPluginEnable == false && bCvarAllow == true)
+	{
+		g_bPluginEnable = true;
+		HookEvent("round_start", Event_RoundStart);
+		HookEvent("round_end", Event_RoundEnd);
+		HookEvent("player_left_checkpoint", Event_PlayerLeftCheckpoint);
+		HookEvent("player_left_start_area", Event_PlayerLeftCheckpoint);
+		//HookEvent("finale_start", Event_FinaleStart);//doesn't work all finales
+		HookEvent("tank_spawn", Event_TankSpawn);
+		HookEvent("witch_spawn", Event_WitchSpawn);
+		HookEntityOutput("trigger_finale", "FinaleStart", EntityOutput_FinaleStart);
+	}
+	else if (g_bPluginEnable == true && bCvarAllow == false)
+	{
+		g_bPluginEnable = false;
+		UnhookEvent("round_start", Event_RoundStart);
+		UnhookEvent("round_end", Event_RoundEnd);
+		UnhookEvent("player_left_checkpoint", Event_PlayerLeftCheckpoint);
+		UnhookEvent("player_left_start_area", Event_PlayerLeftCheckpoint);
+		//UnhookEvent("finale_start", Event_FinaleStart);
+		UnhookEvent("tank_spawn", Event_TankSpawn);
+		UnhookEvent("witch_spawn", Event_WitchSpawn);
+		UnhookEntityOutput("trigger_finale", "FinaleStart", EntityOutput_FinaleStart);
+		delete g_hTimerCheckFlow;
+	}
 }
 
 public void OnMapEnd()
