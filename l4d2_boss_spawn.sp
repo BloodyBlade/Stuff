@@ -5,6 +5,8 @@
 #include <sdktools>
 #include <left4dhooks>
 
+#define DEBUG 0
+
 #define PLUGIN_VERSION "1.3.1"
 
 ConVar  cvarPluginEnable,
@@ -91,6 +93,8 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	CreateConVar("boss_spawn", PLUGIN_VERSION, "[L4D2] Boss Spawn plugin version.", FCVAR_NOTIFY | FCVAR_DONTRECORD);
+
 	cvarPluginEnable       = CreateConVar("boss_spawn", "1", "0: Disable, 1: Enable Plugin", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	cvarInterval           = CreateConVar("boss_spawn_interval", "1.0", "Set interval time check to spawn", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	cvarTanks              = CreateConVar("boss_spawn_tanks", "0", "Set Tanks to spawn simultaneously", FCVAR_NOTIFY, true, 0.0, true, 1.0);
@@ -109,9 +113,10 @@ public void OnPluginStart()
 	cvarFinaleTanks        = CreateConVar("boss_spawn_finale_tanks", "0", "0: Disable tanks in finale map, 1: Allow before finale starts, 2: Allow after finale starts, 3: Allow all finale map", FCVAR_NOTIFY, true, 0.0, true, 3.0);
 	cvarStartWitches       = CreateConVar("boss_spawn_start_witches", "1", "0: Disable Witches in first map, 1: Allow Witches in first map", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	cvarFinaleWitches      = CreateConVar("boss_spawn_finale_witches", "0", "0: Disable witches in finale map, 1: Allow before finale starts, 2: Allow after finale starts, 3: Allow all finale map", FCVAR_NOTIFY, true, 0.0, true, 3.0);
-	cvarRangeMaxTank       = CreateConVar("boss_spawn_range_max_tank", "100.0", "Set progress (0-100)% max of the distance map to can spawn Tank", FCVAR_NOTIFY, true, 0.0, true, 100.0);
-	cvarRangeMinWitch      = CreateConVar("boss_spawn_range_min_witch", "0.0", "Set progress (0-100)% min of the distance map to can spawn Witch", FCVAR_NOTIFY, true, 0.0, true, 100.0);
-	cvarRangeMaxWitch      = CreateConVar("boss_spawn_range_max_witch", "100.0", "Set progress (0-100)% max of the distance map to can spawn Witch", FCVAR_NOTIFY, true, 0.0, true, 100.0);
+	cvarRangeMinTank       = CreateConVar("boss_spawn_range_min_tank", "11.0", "Set progress (0-100)% max of the distance map to can spawn Tank", FCVAR_NOTIFY, true, 0.0, true, 100.0);
+	cvarRangeMaxTank       = CreateConVar("boss_spawn_range_max_tank", "97.0", "Set progress (0-100)% max of the distance map to can spawn Tank", FCVAR_NOTIFY, true, 0.0, true, 100.0);
+	cvarRangeMinWitch      = CreateConVar("boss_spawn_range_min_witch", "5.0", "Set progress (0-100)% min of the distance map to can spawn Witch", FCVAR_NOTIFY, true, 0.0, true, 100.0);
+	cvarRangeMaxWitch      = CreateConVar("boss_spawn_range_max_witch", "99.0", "Set progress (0-100)% max of the distance map to can spawn Witch", FCVAR_NOTIFY, true, 0.0, true, 100.0);
 	cvarRangeRandom        = CreateConVar("boss_spawn_range_random", "1", "0: Set distribute spawning points evenly between each, 1: Set random range between spawning points", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	
 	AutoExecConfig(true, "l4d2_boss_spawn");
@@ -235,12 +240,18 @@ void Event_TankSpawn(Event event, const char[] name, bool dontBroadcast)
 {
 	if (!g_bCheckTanks)
 		g_iTankCounter++;
+	#if DEBUG
+	PrintToChatAll("[DEBUG] TankCounter: %d", g_iTankCounter);
+	#endif
 }
 
 void Event_WitchSpawn(Event event, const char[] name, bool dontBroadcast)
 {
 	if (!g_bCheckWitches)
 		g_iWitchCounter++;
+	#if DEBUG
+	PrintToChatAll("[DEBUG] WitchCounter: %d", g_iWitchCounter);
+	#endif
 }
 
 void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
@@ -334,9 +345,15 @@ Action StartCheckFlow(Handle timer)
 // Timer function to check flow and handle spawning logic
 Action TimerCheckFlow(Handle timer)
 {
+	#if DEBUG
+	PrintToChatAll("[DEBUG] TimerCheckFlow called.");
+	#endif
 	// Stop the timer if the maximum number of Tanks and Witches has been reached
 	if (g_iTankCounter >= g_iMaxTanks && g_iWitchCounter >= g_iMaxWitches)
 	{
+		#if DEBUG
+		PrintToChatAll("[DEBUG] Maximum Tanks and Witches reached. Stopping timer.");
+		#endif
 		g_hTimerCheckFlow = null;
 		return Plugin_Stop;
 	}
@@ -371,6 +388,9 @@ Action TimerCheckFlow(Handle timer)
 						g_fFlowSpawnTank = 0.0;
 						if (g_bCheckTanks)
 							g_iTankCounter++; // Increment the Tank counter
+						#if DEBUG
+						PrintToChatAll("[DEBUG] Tank counter incremented to %d.", g_iTankCounter);
+						#endif
 					}
 				}
 			}
@@ -398,6 +418,9 @@ Action TimerCheckFlow(Handle timer)
 						g_fFlowSpawnWitch = 0.0;
 						if (g_bCheckWitches)
 							g_iWitchCounter++; // Increment the Witch counter
+						#if DEBUG
+						PrintToChatAll("[DEBUG] Witch counter incremented to %d.", g_iWitchCounter);
+						#endif
 					}
 				}
 			}
@@ -435,7 +458,9 @@ int SpawnEntity(float spawnpos[3], const char[] entityType)
 	else if (StrEqual(entityType, "witch"))
 		return L4D2_SpawnWitch(spawnpos, NULL_VECTOR); // Spawn a witch
 	// Log an error if an invalid entity type was passed
-	LogError("Invalid entity type: %s", entityType);
+	#if DEBUG
+	LogMessage("Invalid entity type: %s", entityType);
+	#endif
 	return 0; // Return 0 if the entity type is invalid
 }
 
