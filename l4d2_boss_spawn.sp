@@ -103,8 +103,8 @@ public void OnPluginStart()
 	cvarTotalTanksRandom   = CreateConVar("boss_spawn_total_tanks_rng", "0", "Set max random value total Tanks on map, 0: Disable Random value", FCVAR_NOTIFY, true, 0.0, true, 10.0);
 	cvarTotalWitches       = CreateConVar("boss_spawn_total_witches", "2", "Set total Witches to spawn on map", FCVAR_NOTIFY, true, 1.0, true, 10.0);
 	cvarTotalWitchesRandom = CreateConVar("boss_spawn_total_witches_rng", "0", "Set max random value total Witches on map, 0: Disable Random value", FCVAR_NOTIFY, true, 0.0, true, 10.0);
-	cvarCheckTanks         = CreateConVar("boss_spawn_check_tanks", "1", "0: Checking any Tanks spawned on map, 1: Checking only boss spawn Tanks", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	cvarCheckWitches       = CreateConVar("boss_spawn_check_witches", "1", "0: Checking any Witches spawned on map, 1: Checking only boss spawn Witches", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	cvarCheckTanks         = CreateConVar("boss_spawn_check_tanks", "0", "0: Checking any Tanks spawned on map, 1: Checking only boss spawn Tanks", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	cvarCheckWitches       = CreateConVar("boss_spawn_check_witches", "0", "0: Checking any Witches spawned on map, 1: Checking only boss spawn Witches", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	cvarStartTanks         = CreateConVar("boss_spawn_start_tanks", "1", "0: Disable Tanks in first map, 1: Allow Tanks in first map", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	cvarFinaleTanks        = CreateConVar("boss_spawn_finale_tanks", "0", "0: Disable tanks in finale map, 1: Allow before finale starts, 2: Allow after finale starts, 3: Allow all finale map", FCVAR_NOTIFY, true, 0.0, true, 3.0);
 	cvarStartWitches       = CreateConVar("boss_spawn_start_witches", "1", "0: Disable Witches in first map, 1: Allow Witches in first map", FCVAR_NOTIFY, true, 0.0, true, 1.0);
