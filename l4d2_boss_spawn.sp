@@ -97,10 +97,10 @@ public void OnPluginStart()
 
 	cvarPluginEnable       = CreateConVar("boss_spawn", "1", "0: Disable, 1: Enable Plugin", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	cvarInterval           = CreateConVar("boss_spawn_interval", "1.0", "Set interval time check to spawn", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	cvarTanks              = CreateConVar("boss_spawn_tanks", "0", "Set Tanks to spawn simultaneously", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	cvarTanks              = CreateConVar("boss_spawn_tanks", "1", "Set Tanks to spawn simultaneously", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	cvarTanksRandom        = CreateConVar("boss_spawn_tanks_rng", "0", "Set max random Tanks to spawn simultaneously, 0: Disable Random value", FCVAR_NOTIFY, true, 0.0, true, 10.0);
 	cvarTanksChance        = CreateConVar("boss_spawn_tanks_chance", "100", "Setting chance (0-100)% to spawn Tanks", FCVAR_NOTIFY, true, 0.0, true, 100.0);
-	cvarWitches            = CreateConVar("boss_spawn_witches", "0", "Set Witches to spawn simultaneously", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	cvarWitches            = CreateConVar("boss_spawn_witches", "1", "Set Witches to spawn simultaneously", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	cvarWitchesRandom      = CreateConVar("boss_spawn_witches_rng", "0", "Set max random Witches to spawn simultaneously, 0: Disable Random value", FCVAR_NOTIFY, true, 0.0, true, 10.0);
 	cvarWitchesChance      = CreateConVar("boss_spawn_witches_chance", "100", "Setting chance (0-100)% to spawn Witches", FCVAR_NOTIFY, true, 0.0, true, 100.0);
 	cvarTotalTanks         = CreateConVar("boss_spawn_total_tanks", "2", "Set total Tanks to spawn on map", FCVAR_NOTIFY, true, 1.0, true, 10.0);
