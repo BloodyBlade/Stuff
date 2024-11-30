@@ -64,9 +64,7 @@ public void OnPluginStart()
 		for (int client = 1; client <= MaxClients; client++)
 		{
 			if (IsClientInGame(client))
-			{
 				OnClientPutInServer(client);
-			}
 		}
 	}
 }
@@ -93,9 +91,7 @@ void ParseColor(ConVar convar, int output[3])
 	convar.GetString(cvar_colors, sizeof(cvar_colors));
 	ExplodeString(cvar_colors, " ", colors_get, 3, 4);
 	for (int i = 0; i < 3; i++)
-	{
 		output[i] = Clamp(StringToInt(colors_get[i]), 0, 255);
-	}
 }
 
 public void OnClientPutInServer(int client)
@@ -137,6 +133,7 @@ void OnPostThinkPost(int entity)
 public void OnClientDisconnect(int client)
 {
 	g_bAdded[client] = false;
+	SDKUnhook(client, SDKHook_PostThinkPost, OnPostThinkPost);
 }
 
 void OnRoundStart(Event event, const char[] name, bool dontBroadcast)
@@ -148,9 +145,7 @@ void OnPlayerEvent(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	if (client != 0)
-	{
 		RemoveGlow(client);
-	}
 }
 
 void SetGlow(int entity, int type = 0, const int color[3] = {0, 0, 0}, int range = 0, int range_min = 0, bool flash = false)
@@ -180,9 +175,7 @@ void RemoveGlow(int client)
 void ResetAllGlows()
 {
 	for (int client = 1; client <= MaxClients; client++)
-	{
 		RemoveGlow(client);
-	}
 }
 
 any Native_HasGlow(Handle plugin, int numParams)
