@@ -93,7 +93,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	CreateConVar("boss_spawn", PLUGIN_VERSION, "[L4D2] Boss Spawn plugin version.", FCVAR_NOTIFY | FCVAR_DONTRECORD);
+	CreateConVar("boss_spawn_version", PLUGIN_VERSION, "[L4D2] Boss Spawn plugin version.", FCVAR_NOTIFY | FCVAR_DONTRECORD);
 
 	cvarPluginEnable       = CreateConVar("boss_spawn", "1", "0: Disable, 1: Enable Plugin", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	cvarInterval           = CreateConVar("boss_spawn_interval", "1.0", "Set interval time check to spawn", FCVAR_NOTIFY, true, 0.0, true, 1.0);
