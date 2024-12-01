@@ -221,8 +221,10 @@ void IsAllowed()
 public void OnMapEnd()
 {
 	delete g_hTimerCheckFlow;
+	// Reset counters for tanks and witches
 	g_iTankCounter = 0;
 	g_iWitchCounter = 0;
+	// Reset flow distances for tank and witch spawning
 	g_fFlowSpawnTank = 0.0;
 	g_fFlowSpawnWitch = 0.0;
 	g_bFinaleStarts = false;
@@ -257,8 +259,10 @@ void Event_WitchSpawn(Event event, const char[] name, bool dontBroadcast)
 void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	delete g_hTimerCheckFlow;
+	// Reset counters for tanks and witches
 	g_iTankCounter = 0;
 	g_iWitchCounter = 0;
+	// Reset flow distances for tank and witch spawning
 	g_fFlowSpawnTank = 0.0;
 	g_fFlowSpawnWitch = 0.0;
 	g_bFinaleStarts = false;
@@ -268,8 +272,10 @@ void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	delete g_hTimerCheckFlow;
+	// Reset counters for tanks and witches
 	g_iTankCounter = 0;
 	g_iWitchCounter = 0;
+	// Reset flow distances for tank and witch spawning
 	g_fFlowSpawnTank = 0.0;
 	g_fFlowSpawnWitch = 0.0;
 	g_bFinaleStarts = false;
@@ -315,12 +321,6 @@ Action StartCheckFlow(Handle timer)
 	// Mark the flow-checking process as active
 	g_bChekingFlow = true;
 	g_bFinaleStarts = false;
-	// Reset counters for tanks and witches
-	g_iTankCounter = 0;
-	g_iWitchCounter = 0;
-	// Reset flow distances for tank and witch spawning
-	g_fFlowSpawnTank = 0.0;
-	g_fFlowSpawnWitch = 0.0;
 	// Get the maximum flow distance for the current map
 	g_fFlowMaxMap = L4D2Direct_GetMapMaxFlowDistance();
 	// Determine the maximum number of tanks and witches based on settings and randomization
