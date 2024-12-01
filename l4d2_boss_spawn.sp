@@ -321,11 +321,9 @@ void Event_PlayerLeftCheckpoint(Event event, const char[] name, bool dontBroadca
 	// Determine whether tanks can spawn based on map conditions and settings
 	bool isFirstMap = L4D_IsFirstMapInScenario();
 	bool isFinalMap = L4D_IsMissionFinalMap();
-	g_bAllowSpawnTanks = (g_bStartTanks && isFirstMap || !isFirstMap) && 
-						 (g_iFinaleTanks == 3 || !isFinalMap || (!g_bFinaleStarts && g_iFinaleTanks == 1));
+	g_bAllowSpawnTanks = (g_bStartTanks && isFirstMap || !isFirstMap) && (g_iFinaleTanks == 3 || !isFinalMap || (!g_bFinaleStarts && g_iFinaleTanks == 1));
 	// Determine whether witches can spawn based on map conditions and settings
-	g_bAllowSpawnWitches = (g_bStartWitches && isFirstMap || !isFirstMap) && 
-						   (g_iFinaleWitches == 3 || !isFinalMap || (!g_bFinaleStarts && g_iFinaleWitches == 1));
+	g_bAllowSpawnWitches = (g_bStartWitches && isFirstMap || !isFirstMap) && (g_iFinaleWitches == 3 || !isFinalMap || (!g_bFinaleStarts && g_iFinaleWitches == 1));
 	// Start the flow-checking process by creating a timer
 	CreateTimer(0.1, StartCheckFlow, _, TIMER_FLAG_NO_MAPCHANGE);
 }
@@ -376,20 +374,13 @@ Action TimerCheckFlow(Handle timer)
 	}
 	// Update the highest flow survivor and calculate player flow
 	g_iPlayerHighestFlow = L4D_GetHighestFlowSurvivor();
-	g_fFlowPlayers = IsValidSurvivor(g_iPlayerHighestFlow) 
-		? L4D2Direct_GetFlowDistance(g_iPlayerHighestFlow) 
-		: L4D2_GetFurthestSurvivorFlow();
+	g_fFlowPlayers = IsValidSurvivor(g_iPlayerHighestFlow) ? L4D2Direct_GetFlowDistance(g_iPlayerHighestFlow) : L4D2_GetFurthestSurvivorFlow();
 	// Handle spawning of Tanks
-	if (g_bAllowSpawnTanks && g_iTankCounter < g_iMaxTanks 
-		&& g_fFlowPlayers >= g_fFlowRangeMinTank && g_fFlowPlayers <= g_fFlowRangeMaxTank)
+	if (g_bAllowSpawnTanks && g_iTankCounter < g_iMaxTanks && g_fFlowPlayers >= g_fFlowRangeMinTank && g_fFlowPlayers <= g_fFlowRangeMaxTank)
 	{
 		// Calculate the flow threshold for spawning Tanks if not already set
 		if (!g_fFlowSpawnTank)
-		{
-			g_fFlowSpawnTank = g_bRangeRandom
-				? GetRandomFloat(g_fFlowCanSpawnTank, g_fFlowCanSpawnTank + g_fFlowRangeSpawnTank)
-				: g_fFlowCanSpawnTank + (g_iTankCounter ? g_fFlowRangeSpawnTank : float(0));
-		}
+			g_fFlowSpawnTank = g_bRangeRandom ? GetRandomFloat(g_fFlowCanSpawnTank, g_fFlowCanSpawnTank + g_fFlowRangeSpawnTank) : g_fFlowCanSpawnTank + (g_iTankCounter ? g_fFlowRangeSpawnTank : float(0));
 		// Spawn Tanks if player flow meets the threshold
 		if (g_fFlowPlayers >= g_fFlowSpawnTank)
 		{
@@ -414,8 +405,7 @@ Action TimerCheckFlow(Handle timer)
 		}
 	}
 	// Handle spawning of Witches
-	if (g_bAllowSpawnWitches && g_iWitchCounter < g_iMaxWitches 
-		&& g_fFlowPlayers >= g_fFlowRangeMinWitch && g_fFlowPlayers <= g_fFlowRangeMaxWitch)
+	if (g_bAllowSpawnWitches && g_iWitchCounter < g_iMaxWitches && g_fFlowPlayers >= g_fFlowRangeMinWitch && g_fFlowPlayers <= g_fFlowRangeMaxWitch)
 	{
 		// Calculate the flow threshold for spawning Witches if not already set
 		if (!g_fFlowSpawnWitch)
