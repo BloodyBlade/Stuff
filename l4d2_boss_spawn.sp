@@ -220,15 +220,7 @@ void IsAllowed()
 
 public void OnMapEnd()
 {
-	delete g_hTimerCheckFlow;
-	// Reset counters for tanks and witches
-	g_iTankCounter = 0;
-	g_iWitchCounter = 0;
-	// Reset flow distances for tank and witch spawning
-	g_fFlowSpawnTank = 0.0;
-	g_fFlowSpawnWitch = 0.0;
-	g_bFinaleStarts = false;
-	g_bChekingFlow = false;
+	Reset();
 }
 
 void EntityOutput_FinaleStart(const char[] output, int caller, int activator, float time)
@@ -240,46 +232,71 @@ void EntityOutput_FinaleStart(const char[] output, int caller, int activator, fl
 
 void Event_TankSpawn(Event event, const char[] name, bool dontBroadcast)
 {
-	if (!g_bCheckTanks)
-		g_iTankCounter++;
-	#if DEBUG
-	PrintToChatAll("[DEBUG] TankCounter: %d", g_iTankCounter);
-	#endif
+	if (g_iTankCounter >= g_iMaxTanks)
+	{
+		int tank = event.GetInt("tankid");
+		if (IsValidEntity(tank))
+		{
+		 	RemoveEntity(tank);
+			#if DEBUG
+			PrintToChatAll("[DEBUG] Removed excess tank. Tank counter is now %d.", g_iTankCounter);
+			#endif
+		}
+	}
+	else
+	{
+		if (!g_bCheckTanks)
+			g_iTankCounter++;
+		#if DEBUG
+		PrintToChatAll("[DEBUG] TankCounter: %d", g_iTankCounter);
+		#endif
+	}
 }
 
 void Event_WitchSpawn(Event event, const char[] name, bool dontBroadcast)
 {
-	if (!g_bCheckWitches)
-		g_iWitchCounter++;
-	#if DEBUG
-	PrintToChatAll("[DEBUG] WitchCounter: %d", g_iWitchCounter);
-	#endif
+	if (g_iWitchCounter >= g_iMaxWitches)
+	{
+		int witch = event.GetInt("witchid");
+		if (IsValidEntity(witch))
+		{
+			RemoveEntity(witch);
+			#if DEBUG
+			PrintToChatAll("[DEBUG] Removed excess witch. Witch counter is now %d.", g_iWitchCounter);
+			#endif
+		}
+	}
+	else
+	{
+		if (!g_bCheckWitches)
+			g_iWitchCounter++;
+		#if DEBUG
+		PrintToChatAll("[DEBUG] WitchCounter: %d", g_iWitchCounter);
+		#endif
+	}
 }
 
 void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	delete g_hTimerCheckFlow;
-	// Reset counters for tanks and witches
-	g_iTankCounter = 0;
-	g_iWitchCounter = 0;
-	// Reset flow distances for tank and witch spawning
-	g_fFlowSpawnTank = 0.0;
-	g_fFlowSpawnWitch = 0.0;
-	g_bFinaleStarts = false;
-	g_bChekingFlow = false;
+	Reset();
 }
 
 void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
-	delete g_hTimerCheckFlow;
+	Reset();
+}
+
+void Reset()
+{
+	g_bFinaleStarts = false;
+	g_bChekingFlow = false;
 	// Reset counters for tanks and witches
 	g_iTankCounter = 0;
 	g_iWitchCounter = 0;
 	// Reset flow distances for tank and witch spawning
 	g_fFlowSpawnTank = 0.0;
 	g_fFlowSpawnWitch = 0.0;
-	g_bFinaleStarts = false;
-	g_bChekingFlow = false;
+	delete g_hTimerCheckFlow;
 }
 
 void Event_PlayerLeftCheckpoint(Event event, const char[] name, bool dontBroadcast)
